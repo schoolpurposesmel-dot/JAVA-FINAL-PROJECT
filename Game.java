@@ -52,10 +52,10 @@ public class Game {
         story.continuation(characterName);
         
     System.out.println("\nA WILD LOST NODE APPEARS!");
-    Utils.slowPrint("\n(" + characterName + "):\"Whoa! What was that?!\"", 20);
+    Utils.slowPrint("\n(" + characterName + "): \"Whoa! What was that?!\"", 20);
     Utils.slowPrint("(Guard): That's one of them! A corrupted being. A lost node. Quick! Prepare for Battle!", 20);  
 
-    Utils.slowPrint("\"Use your mana wisely! Every still drains your energy, but landing hits restores some! Don’t let your Brainrot die!\"", 20);  
+    Utils.slowPrint("(Guard): \"Use your mana wisely! Every still drains your energy! Don't let your Brainrot die!\"", 20);  
         // --- START: BATTLE READY LOOP (FIXED) ---
         boolean battleReady = false;
         System.out.println("\n-------------------------------------------");
@@ -91,7 +91,7 @@ public class Game {
 
         story.duringBattle(characterName);
         story.afterBattle(characterName);
-
+        story.afterTutorial(characterName);
         mainLoop();
     }
     

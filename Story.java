@@ -57,6 +57,17 @@ public class Story {
 
     public void afterBattle(String name) {}
 
+     public void afterTutorial(String name) {
+        Utils.slowPrint("(Guard): \"You did good, kid. But this storm's only getting worse. You'll need supplies\"", 20);
+        Utils.slowPrint(name +  "\": \"Where do I go?\"", 20);
+        Utils.slowPrint("(Guard): \"Go visit Espacio. You can collect more brainrots there to help you escape.\"", 20);
+        Utils.slowPrint("(Guard): \"You can also visit the canteen. \"", 20);
+        Utils.slowPrint("(Guard): \"In the canteen, you can restore your brainrots, buy potions, mana snacks, and revival food using fragments from fallen enemies. \"", 20);
+        Utils.slowPrint("(Guard): \"It's your lifeline in this chaos\"", 20);
+        Utils.slowPrint("(Guard): \"And kid..whatever you do..don't go near the faculty buildings yet. They're not what they used to be..\"", 20);
+        Utils.slowPrint("*Walkie-talkie dies* ", 20);
+    }
+
     // === UPDATED: DRAMATIC SIR KHAI ENTRANCE ===
     public void bossEncounter(String bossName) {
         Utils.line();

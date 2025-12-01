@@ -92,17 +92,17 @@ public void showBackstory(String name){
         case "Carmel":
             Utils.slowPrint("She had stayed late at the gym for extra tennis practice, headphones in and racket in hand as she hit balls against the wall", 20);
             Utils.slowPrint("balls bouncing against the wall echoed in the quiet gym. Then the power cut out, plunging the entire court into darkness.", 20);    
-            Utils.slowPrint("The gym doors slammed shut on their own, and her phone lit up with one single message before dying: “RUN.” Her heart was racing,", 20);    
+            Utils.slowPrint("The gym doors slammed shut on their own, and her phone lit up with one single message before dying: \"RUN.\" Her heart was racing,", 20);    
             Utils.slowPrint("as she looked for the exits only to find that the gate was locked. The eerie noises grew louder,", 20);    
             Utils.slowPrint("and even though she couldn't see anything, she felt it. Something was coming for her, and she had to be ready to face it.", 20);    
             break;
          case "Trixy":
-            Utils.slowPrint("She had been cramming all night for her Chemistry test, buried in books and notes in the quietest corner of the library.", 20);
+            Utils.slowPrint("She had been cramming all night for her Java test, face buried in her laptop practicing problems in the quietest corner of the library.", 20);
             Utils.slowPrint("The sound of the rain outside and the steady hum of the warm lights lulled her to sleep.", 20);
             Utils.slowPrint("When she woke up, the library was quiet... too quiet. Chairs were overturned, books were scattered across the floor,", 20);
             Utils.slowPrint("as if everyone had left in a hurry. She walked around the library, calling out for anyone, but her voice only echoed back at her.", 20);
             Utils.slowPrint("Something was wrong. She could feel eyes on her every time the lights flickered.", 20);
-            Utils.slowPrint("With no one around, she grabbed her notes and kept whispering to herself, “I just have to survive and get out of here.”", 20);
+            Utils.slowPrint("With no one around, she grabbed her notes and kept whispering to herself, \"I just have to survive and get out of here.\"", 20);
             break;
 
         case "Sedric":
