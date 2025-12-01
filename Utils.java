@@ -6,9 +6,7 @@ public class Utils {
     private static final Random rnd = new Random();
     public static boolean instantTextMode = false; 
 
-    // =========================================================
-    // 💡 NEW METHOD: Handles YES/NO input and sets the mode
-    // =========================================================
+   
     public static void setInstantTextMode() {
         // Creates a new Scanner for local use in this method
         Scanner scanner = new Scanner(System.in); 

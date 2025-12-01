@@ -62,7 +62,7 @@ public class Battle {
                     case "3": if(activeBrainrot.useSkill(3, enemy, dmgMult)) playerTurnOver = true; break;
                     case "4": switchBrainrot(); ASCII.drawBattleUI(enemy, activeBrainrot); break;
                     case "5": if(openBag()) { System.out.println(">> Item used!"); Utils.pause(800); } break;
-                    case "6": System.out.println("💨 You ran away safely!"); return 2; 
+                    case "6": System.out.println("You ran away safely!"); return 2; 
                     
                     // === NEW: ABILITY LOGIC ===
                     case "7":
@@ -84,12 +84,12 @@ public class Battle {
             }
 
             if (enemy.isFainted()) {
-                System.out.println("\n💥 " + enemy.getName() + " was defeated!");
+                System.out.println("\n" + enemy.getName() + " was defeated!");
                 processVictory();
                 return 1;
             }
 
-            System.out.println("\n🔻 Enemy's Turn...");
+            System.out.println("\nEnemy's Turn...");
             Utils.pause(500);
             enemy.attack(activeBrainrot, turn);
             
@@ -97,7 +97,7 @@ public class Battle {
             player.decreaseCooldown();
 
             if (activeBrainrot.isFainted()) {
-                System.out.println("☠️ " + activeBrainrot.getName() + " fainted!");
+                System.out.println("" + activeBrainrot.getName() + " fainted!");
                 activeBrainrot = getNextAlive();
                 if (activeBrainrot == null) {
                     ASCII.printBox("DEFEAT...");

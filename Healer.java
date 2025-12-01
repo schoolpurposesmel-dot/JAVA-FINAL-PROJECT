@@ -11,7 +11,7 @@ public class Healer extends Player {
     @Override public boolean useAbility(Brainrot active) {
         int healAmt = active.getMaxHp() / 4; // 25% Heal
         active.heal(healAmt);
-        System.out.println("✨ HEALER MAGIC: 'Stay with me!'");
+        System.out.println("HEALER MAGIC: 'Stay with me!'");
         System.out.println(">> Healed " + active.getName() + " for " + healAmt + " HP!");
         return true;
     }

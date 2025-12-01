@@ -1,3 +1,4 @@
+import java.security.Guard;
 import java.util.*;
 
 public class Game {
@@ -50,9 +51,40 @@ public class Game {
 
         story.continuation(characterName);
         
-        System.out.println("A wild Lost Node appears!");
-        if (player.getPartyCount() == 0) player.addToParty(BrainrotFactory.liriliLarila());
+    System.out.println("\nA WILD LOST NODE APPEARS!");
+    Utils.slowPrint("\n(" + characterName + "):\"Whoa! What was that?!\"", 20);
+    Utils.slowPrint("(Guard): That's one of them! A corrupted being. A lost node. Quick! Prepare for Battle!", 20);  
+
+    Utils.slowPrint("\"Use your mana wisely! Every still drains your energy, but landing hits restores some! Don’t let your Brainrot die!\"", 20);  
+        // --- START: BATTLE READY LOOP (FIXED) ---
+        boolean battleReady = false;
+        System.out.println("\n-------------------------------------------");
+        System.out.println("Prepare yourself for Battle. Type 'GO' to start the battle...");
+
+        while (!battleReady) {
+            System.out.print("> ");
+            
+            try {
+                String input = sc.nextLine().trim();
+                
+                if (input.equalsIgnoreCase("GO")) {
+                    battleReady = true;
+                    System.out.println("\nGOODLUCK!");
+                } else {
+                    System.out.println("Invalid command. You must type 'GO' to proceed. Try again.");
+                }
+            } catch (Exception e) {
+                // If the console input stream fails, log the error and force continuation.
+                System.err.println("An unexpected input error occurred. Forcing battle start. Error: " + e.getMessage());
+                battleReady = true;
+            }
+        }
+        System.out.println("-------------------------------------------");
         
+        if (player.getPartyCount() == 0) {
+            player.addToParty(BrainrotFactory.randomBrainrot(player)); 
+        }
+
         Enemy tutorialEnemy = EnemyFactory.createLostNode();
         Battle tutorialBattle = new Battle(player, tutorialEnemy, sc, inventory);
         tutorialBattle.start();
@@ -276,25 +308,44 @@ public class Game {
         running = false;
     }
 
-    private void farmLoop() {
+   private void farmLoop() {
         ASCII.printMenuHeader("ESPACIO FARMING");
         boolean farming = true;
         while(farming) {
             System.out.println(" [1] Search   [0] Back");
             System.out.print(" > ");
             String cmd = sc.nextLine().trim();
-            if(cmd.equals("1")) {
-                if (Math.random() < 0.65) {
-                    Brainrot found = BrainrotFactory.randomBrainrot(player);
-                    ASCII.printBox("WILD " + found.getName().toUpperCase() + " APPEARED!");
-                    System.out.println(found.describeShort());
-                    if(inventory.addToBackpack(found)) System.out.println("Captured!");
-                    else {
-                        System.out.println("Backpack full! Sell some Brainrots.");
-                        farming = false;
+
+            try {
+                // 1. Attempt to convert the string input to an integer
+                int selection = Integer.parseInt(cmd);
+
+                if (selection == 1) {
+                    // --- Original Logic for [1] Search ---
+                    if (Math.random() < 0.65) {
+                        Brainrot found = BrainrotFactory.randomBrainrot(player);
+                        ASCII.printBox("WILD " + found.getName().toUpperCase() + " APPEARED!");
+                        System.out.println(found.describeShort());
+                        if(inventory.addToBackpack(found)) System.out.println("Captured!");
+                        else {
+                            System.out.println("Backpack full! Sell some Brainrots.");
+                            farming = false; // Exit loop if backpack is full
+                        }
+                    } else {
+                        System.out.println("...nothing found...");
                     }
-                } else System.out.println("...nothing found...");
-            } else if(cmd.equals("0")) farming = false;
+                } else if(selection == 0) {
+                    // --- Original Logic for [0] Back ---
+                    farming = false;
+                } else {
+                    // 3. Catch valid numbers that are not 1 or 0
+                    System.out.println("Invalid command: Input must be 1 or 0.");
+                }
+
+            } catch (NumberFormatException e) {
+                // 4. Catch input that is not a valid number (e.g., "a", "back")
+                System.out.println("Invalid input format. Please enter a number (1 or 0).");
+            }
         }
     }
     

@@ -21,7 +21,8 @@ public class Story {
         Utils.slowPrint("(" + name + "): *picks up the walkie talkie* \"Yes! I'm here! Who is this?\"", 20);
         Utils.slowPrint("Guard(through static): \"Finally! I'm the guard stationed at the back gate. Don't panic kid, you're safe for now.\"", 20);
         Utils.slowPrint("(" + name + "): \"Safe? The whole campus feels..wrong. What's going on?\"", 20);
-        Utils.slowPrint("(Guard): \"It's the storm. It awakened something ancient beneath the school, old energy that's been buried for decades. Now it's leaking out, twisting everything it touches.", 20);
+        Utils.slowPrint("(Guard): \"It's the storm. It awakened something ancient beneath the school, old energy that's been buried for decades.\"", 20);
+         Utils.slowPrint("(Guard): \"Now it's leaking out, twisting everything it touches.\"", 20);
     }
 
     public void loreIntro() {
@@ -37,14 +38,14 @@ public class Story {
     }
 
     public void continuation(String name) {
-        Utils.slowPrint("\n(" + name + "):  \"Cursed? Then how do I get out?\"", 20);
+        Utils.slowPrint("\n(" + name + "):\"Cursed? Then how do I get out?\"", 20);
         Utils.slowPrint("(Guard): \"You'll need help, and not the kind you're used to.\"", 20);
+        Utils.slowPrint("(Guard): \"There should be a chest inside. Open it.\"", 20);
         Utils.slowPrint("*" + name + " opens the chest* ", 20);
-        Utils.slowPrint("(Guard): \"Those are Brainrots. Creatures born from the same energy that corrupted the campus.\"", 20);
+        Utils.slowPrint("(Guard): \"This is a Brainrot. A creature born from the same energy that corrupted the campus.\"", 20);
         Utils.slowPrint("(Guard): \"Not all of them turned hostile. Some retained their will, and their strength.\"", 20);
-        Utils.slowPrint("(Guard): \"Use those 3 for now to be with you as you escape this hellish campus.”\"", 20);
-        Utils.slowPrint("(Guard): \"Those are Brainrots. Creatures born from the same energy that corrupted the campus.\"", 20);
-        Utils.slowPrint("(Guard): \"Those are Brainrots. Creatures born from the same energy that corrupted the campus.\"", 20);
+        Utils.slowPrint("(Guard): \"Use this for now to be with you as you escape this hellish campus.”\"", 20);
+        Utils.slowPrint("(Guard): \"Don't worry, you can collect more later.\"", 20);
 
     }
 
@@ -59,7 +60,7 @@ public class Story {
     // === UPDATED: DRAMATIC SIR KHAI ENTRANCE ===
     public void bossEncounter(String bossName) {
         Utils.line();
-        ASCII.printBox("⚠️ WARNING: HIGH LEVEL THREAT DETECTED ⚠️");
+        ASCII.printBox("WARNING: HIGH LEVEL THREAT DETECTED");
         Utils.pause(1000);
 
         if (bossName.contains("Sir Khai")) {

@@ -61,10 +61,10 @@ public class Enemy implements ICombatant {
             mana -= chosenSkill.getManaCost();
             int dmg = Utils.randomBetween(chosenSkill.getBaseDamageRangeLow(), chosenSkill.getBaseDamageRangeHigh());
             
-            System.out.println("🔻 " + name + " casts " + chosenSkill.getName() + "!");
+            System.out.println(name + " casts " + chosenSkill.getName() + "!");
             target.takeDamage(dmg);
         } else {
-            System.out.println("🔻 " + name + " is out of mana and Struggles!");
+            System.out.println(name + " is out of mana and Struggles!");
             int struggleDmg = 15;
             target.takeDamage(struggleDmg);
             mana = Math.min(maxMana, mana + 10);

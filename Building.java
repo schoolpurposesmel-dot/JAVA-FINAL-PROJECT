@@ -34,11 +34,11 @@ public class Building {
             int result = battle.start();
 
             if (result == 2) {
-                System.out.println("🏃 You fled the building!");
+                System.out.println("You fled the building!");
                 return 2; 
             }
             if (result == 0) {
-                System.out.println("❌ Defeated on Floor " + floor);
+                System.out.println("Defeated on Floor " + floor);
                 return 0; 
             }
             
@@ -48,17 +48,17 @@ public class Building {
         }
 
         if (boss != null) {
-            ASCII.printBox("⚠️ BOSS ROOM: " + boss.getName() + " ⚠️");
+            ASCII.printBox("BOSS ROOM: " + boss.getName() );
             Utils.pause(1000);
             
             Battle bossBattle = new Battle(player, boss, sc, inv);
             int bossResult = bossBattle.start();
 
             if (bossResult == 1) {
-                System.out.println("🎉 Boss Defeated!");
+                System.out.println("Boss Defeated!");
                 return 1;
             } else if (bossResult == 2) {
-                System.out.println("🏃 Escaped!");
+                System.out.println("Escaped!");
                 return 2;
             } else {
                 return 0;

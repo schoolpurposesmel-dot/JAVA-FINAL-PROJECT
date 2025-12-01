@@ -30,13 +30,13 @@ public class ASCII {
         
         System.out.println("\n");
         System.out.println("   ╔════════════════════════════════════╗");
-        System.out.println("   ║ 👾 ENEMY: " + enemyName + " ║");
+        System.out.println("   ║ ENEMY: " + enemyName + " ║");
         System.out.println("   ║    HP: " + drawBar(e.getCurrentHp(), e.getMaxHp(), 15) + " " + e.getCurrentHp() + " ║");
         System.out.println("   ║    MP: " + drawBar(e.getCurrentMana(), e.getMaxMana(), 10) + " " + e.getCurrentMana() + " ║");
         System.out.println("   ╚════════════════════════════════════╝");
         System.out.println("                 ⚡ VS ⚡");
         System.out.println("   ╔════════════════════════════════════╗");
-        System.out.println("   ║ 🧠 YOU:   " + playerName + " ║");
+        System.out.println("   ║  YOU:   " + playerName + " ║");
         System.out.println("   ║    HP: " + drawBar(p.getCurrentHp(), p.getMaxHp(), 15) + " " + p.getCurrentHp() + " ║");
         System.out.println("   ║    MP: " + drawBar(p.getCurrentMana(), p.getMaxMana(), 10) + " " + p.getCurrentMana() + " ║");
         System.out.println("   ╚════════════════════════════════════╝");

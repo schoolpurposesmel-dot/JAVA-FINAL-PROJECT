@@ -7,7 +7,7 @@ public class Collector extends Player {
     @Override public String getAbilityName() { return "POCKET CHANGE"; }
 
     @Override public boolean useAbility(Brainrot active) {
-        System.out.println("💰 COLLECTOR: 'Ooh, what's this?'");
+        System.out.println("COLLECTOR: 'Ooh, what's this?'");
         System.out.println(">> found 50 Coins on the floor!");
         addCoins(50);
         return true;

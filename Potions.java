@@ -134,7 +134,7 @@ public class Potions {
                     viewingSupport = false;
                     break;
                 default:
-                    System.out.println("Invalid choice. Please enter 1–5.");
+                    System.out.println("Invalid choice. Please enter 1-5.");
             }
         }
     }
