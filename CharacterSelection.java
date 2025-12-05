@@ -102,7 +102,7 @@ public void showBackstory(String name){
             Utils.slowPrint("When she woke up, the library was quiet... too quiet. Chairs were overturned, books were scattered across the floor,", 20);
             Utils.slowPrint("as if everyone had left in a hurry. She walked around the library, calling out for anyone, but her voice only echoed back at her.", 20);
             Utils.slowPrint("Something was wrong. She could feel eyes on her every time the lights flickered.", 20);
-            Utils.slowPrint("With no one around, she grabbed her notes and kept whispering to herself, \"I just have to survive and get out of here.\"", 20);
+            Utils.slowPrint("With no one around, she grabbed her notes and kept whispering to herself, \"I just have get out of here.\"", 20);
             break;
 
         case "Sedric":

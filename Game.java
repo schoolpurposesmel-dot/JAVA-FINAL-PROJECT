@@ -308,46 +308,39 @@ public class Game {
         running = false;
     }
 
-   private void farmLoop() {
-        ASCII.printMenuHeader("ESPACIO FARMING");
-        boolean farming = true;
-        while(farming) {
-            System.out.println(" [1] Search   [0] Back");
-            System.out.print(" > ");
-            String cmd = sc.nextLine().trim();
-
-            try {
-                // 1. Attempt to convert the string input to an integer
-                int selection = Integer.parseInt(cmd);
-
-                if (selection == 1) {
-                    // --- Original Logic for [1] Search ---
-                    if (Math.random() < 0.65) {
-                        Brainrot found = BrainrotFactory.randomBrainrot(player);
-                        ASCII.printBox("WILD " + found.getName().toUpperCase() + " APPEARED!");
-                        System.out.println(found.describeShort());
-                        if(inventory.addToBackpack(found)) System.out.println("Captured!");
-                        else {
-                            System.out.println("Backpack full! Sell some Brainrots.");
-                            farming = false; // Exit loop if backpack is full
-                        }
-                    } else {
-                        System.out.println("...nothing found...");
-                    }
-                } else if(selection == 0) {
-                    // --- Original Logic for [0] Back ---
-                    farming = false;
+  private void farmLoop() {
+    ASCII.printMenuHeader("ESPACIO FARMING");
+    boolean farming = true;
+    while(farming) {
+        // Check if backpack is already full at the start of the loop
+        if (inventory.size() >= 10) {
+            System.out.println("Backpack is full! You must sell or equip Brainrots before searching again.");
+            System.out.println("Returning to Main Menu.");
+            return; // Exit the farmLoop entirely if it's full
+        }
+        
+        System.out.println(" [1] Search   [0] Back");
+        System.out.print(" > ");
+        String cmd = sc.nextLine().trim();
+        if(cmd.equals("1")) {
+            if (Math.random() < 0.65) {
+                Brainrot found = BrainrotFactory.randomBrainrot(player);
+                ASCII.printBox("WILD " + found.getName().toUpperCase() + " APPEARED!");
+                System.out.println(found.describeShort());
+                
+                // If capture fails (i.e., backpack hits limit), print message and continue loop to re-check the full status.
+                if(inventory.addToBackpack(found)) {
+                    System.out.println("Captured! (" + inventory.size() + "/10)");
                 } else {
-                    // 3. Catch valid numbers that are not 1 or 0
-                    System.out.println("Invalid command: Input must be 1 or 0.");
+                    System.out.println("Backpack full! Sell or equip Brainrots.");
+                    // No need to set farming = false here, the loop re-check at the top handles the exit.
                 }
-
-            } catch (NumberFormatException e) {
-                // 4. Catch input that is not a valid number (e.g., "a", "back")
-                System.out.println("Invalid input format. Please enter a number (1 or 0).");
-            }
+            } else System.out.println("...nothing found...");
+        } else if(cmd.equals("0")) {
+            farming = false;
         }
     }
+}
     
     private void equipMenu() {
         ASCII.printMenuHeader("EQUIPMENT");

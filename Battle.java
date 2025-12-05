@@ -42,15 +42,18 @@ public class Battle {
                 System.out.println("  Choose action:");
                 System.out.println("  [1] " + activeBrainrot.getSkill1().getName() + " (" + activeBrainrot.getSkill1().getManaCost() + " MP)");
                 System.out.println("  [2] " + activeBrainrot.getSkill2().getName() + " (" + activeBrainrot.getSkill2().getManaCost() + " MP)");
-                System.out.println("  [3] " + activeBrainrot.getUlt().getName() + " (" + activeBrainrot.getUlt().getManaCost() + " MP)");
+                
+                // 1. ULTIMATE COOLDOWN DISPLAY
+                String ultCooldownTxt = activeBrainrot.isUltReady() ? "" : " (CD: " + activeBrainrot.getUltCooldown() + "t)";
+                System.out.println("  [3] " + activeBrainrot.getUlt().getName() + " (" + activeBrainrot.getUlt().getManaCost() + " MP)" + ultCooldownTxt);
+                
                 System.out.println("  [4] Switch Brainrot");
                 System.out.println("  [5] Bag");
                 System.out.println("  [6] Run");
                 
-                // === NEW: ROLE ABILITY OPTION ===
+                // ROLE ABILITY OPTION
                 String cooldownTxt = player.isAbilityReady() ? "(READY!)" : "(" + player.getCooldown() + " turns)";
                 System.out.println("  [7] ROLE: " + player.getAbilityName() + " " + cooldownTxt);
-                // ================================
                 
                 System.out.print("  > ");
                 String input = sc.nextLine().trim();
@@ -64,7 +67,6 @@ public class Battle {
                     case "5": if(openBag()) { System.out.println(">> Item used!"); Utils.pause(800); } break;
                     case "6": System.out.println("You ran away safely!"); return 2; 
                     
-                    // === NEW: ABILITY LOGIC ===
                     case "7":
                         if (player.isAbilityReady()) {
                             if (player.useAbility(activeBrainrot)) {
@@ -75,7 +77,6 @@ public class Battle {
                             System.out.println("Ability on cooldown!");
                         }
                         break;
-                    // ==========================
                     
                     default: System.out.println("Invalid command.");
                 }
@@ -95,6 +96,8 @@ public class Battle {
             
             // DECREASE COOLDOWN AT END OF ROUND
             player.decreaseCooldown();
+            // 2. DECREASE ULTIMATE COOLDOWN
+            activeBrainrot.decreaseUltCooldown();
 
             if (activeBrainrot.isFainted()) {
                 System.out.println("" + activeBrainrot.getName() + " fainted!");
@@ -111,8 +114,6 @@ public class Battle {
         return 0;
     }
 
-    // ... (switchBrainrot, openBag, getNextAlive, processVictory methods remain same as previous version) ...
-    // Keeping file concise, include existing methods here
     private boolean switchBrainrot() {
         System.out.println("\n=== SELECT BRAINROT ===");
         for (int i = 0; i < player.party.size(); i++) {
@@ -121,8 +122,13 @@ public class Battle {
             if (b.isFainted()) status = " [FAINTED]";
             else if (b == activeBrainrot) status = " [ACTIVE]";
             
+            // 3. CALCULATE AND DISPLAY MANA PERCENTAGE
+            double manaPercent = (double)b.getCurrentMana() / b.getMaxMana() * 100;
+            String manaDisplay = String.format("%.0f%%", manaPercent);
+            
             System.out.println(" [" + (i + 1) + "] " + b.getName() + status + 
-                               " | HP: " + b.getCurrentHp() + "/" + b.getMaxHp());
+                               " | HP: " + b.getCurrentHp() + "/" + b.getMaxHp() +
+                               " | Mana: " + manaDisplay); // Updated line
         }
         System.out.println(" [0] Cancel");
         System.out.print(" Enter slot number > ");
