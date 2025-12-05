@@ -13,16 +13,16 @@ public class Brainrot implements ICombatant, Serializable {
     private int mana;
     private final Skill s1, s2, ult;
     private double tempBuff = 1.0;
-    private int upgradeLevel = 0; 
-    private final int MAX_UPGRADE = 2;
-    private int ultCooldown = 0; 
-    private final int MAX_ULT_COOLDOWN = 3;
-    public void resetUltCooldown() { this.ultCooldown = MAX_ULT_COOLDOWN; }
-    public void decreaseUltCooldown() { if (ultCooldown > 0) ultCooldown--; }
-    public boolean isUltReady() { return ultCooldown <= 0; }
-    public int getUltCooldown() { return ultCooldown; }
     
-    // NEW: For Tank Ability
+    // NEW: Upgrade Counter
+    private int upgradeLevel = 0; 
+    private final int MAX_UPGRADE = 2; // Maximum upgrades allowed
+    
+    // NEW: Ult Cooldown
+    private int ultCooldown; 
+    private final int MAX_ULT_COOLDOWN = 3; 
+    
+    // For Tank Ability
     private double damageResist = 1.0; 
     
     public Brainrot(String name, Rarity rarity, int maxHp, int maxMana, Skill s1, Skill s2, Skill ult) {
@@ -35,6 +35,9 @@ public class Brainrot implements ICombatant, Serializable {
         this.s1 = s1;
         this.s2 = s2;
         this.ult = ult;
+        
+        // CRITICAL CHANGE: ENFORCE INITIAL 3-TURN CHARGE REQUIREMENT
+        this.ultCooldown = MAX_ULT_COOLDOWN; 
     }
 
     @Override public String getName() { return name; }
@@ -71,6 +74,12 @@ public class Brainrot implements ICombatant, Serializable {
     public Skill getSkill1() { return s1; }
     public Skill getSkill2() { return s2; }
     public Skill getUlt() { return ult; }
+    
+    // Cooldown management methods
+    public void resetUltCooldown() { this.ultCooldown = MAX_ULT_COOLDOWN; }
+    public void decreaseUltCooldown() { if (ultCooldown > 0) ultCooldown--; }
+    public boolean isUltReady() { return ultCooldown <= 0; }
+    public int getUltCooldown() { return ultCooldown; }
 
     public void buffMaxHp(int amount) {
         this.maxHp += amount;
@@ -87,13 +96,57 @@ public class Brainrot implements ICombatant, Serializable {
     public void applyTempBuff(double m) { tempBuff = m; }
     public void clearTempBuff() { tempBuff = 1.0; }
 
-    
+    // === CONSOLIDATED useSkill METHOD ===
+    public boolean useSkill(int id, Enemy enemy, double playerMultiplier) {
+        Skill sk = id == 1 ? s1 : id == 2 ? s2 : ult;
+        if(sk == null) return false;
+        
+        // 1. CHECK ULT COOLDOWN
+        if (id == 3 && !isUltReady()) {
+            System.out.println("Ult is on cooldown! (" + ultCooldown + " charges remaining)");
+            return false;
+        }
+        
+        if(mana < sk.getManaCost()) {
+            System.out.println("Not enough mana!");
+            return false;
+        }
+
+        mana -= sk.getManaCost();
+        
+        // 2. SET ULT COOLDOWN
+        if (id == 3) {
+            resetUltCooldown();
+        }
+
+        int base = Utils.randomBetween(sk.getBaseDamageRangeLow(), sk.getBaseDamageRangeHigh());
+        
+        double rarityMult = switch(rarity) {
+            case COMMON -> 1.0;
+            case RARE -> 1.4;
+            case LEGENDARY -> 2.0;
+        };
+        
+        // Define finalDmg
+        int finalDmg = (int)Math.round(base * rarityMult * tempBuff * playerMultiplier);
+
+        enemy.takeDamage(finalDmg);
+        
+        String buffMsg = (playerMultiplier > 1.0 || tempBuff > 1.0) ? " (Boosted!)" : "";
+        System.out.println(name + " uses " + sk.getName() + " for ~" + finalDmg + " dmg." + buffMsg);
+
+        clearTempBuff();
+        return true;
+    }
+    // ====================================
+
     public String describeShort() {
         return name + " (" + rarity + ") HP:" + maxHp + "/" + hp + " Mana:" + maxMana + "/" + mana
                 + " Skills: " + s1.getName() + ", " + s2.getName() + ", " + ult.getName();
     }
 
-   public void upgrade() {
+    // === MODIFIED UPGRADE METHOD (Implements Limit) ===
+    public void upgrade() {
         if (upgradeLevel >= MAX_UPGRADE) {
             System.out.println(name + " is already at max upgrade level (" + MAX_UPGRADE + ")!");
             return;
@@ -110,49 +163,5 @@ public class Brainrot implements ICombatant, Serializable {
         upgradeLevel++; // Increment the counter
         System.out.println("Upgraded! (" + upgradeLevel + "/" + MAX_UPGRADE + ")");
     }
-
-    public boolean useSkill(int id, Enemy enemy, double playerMultiplier) {
-    Skill sk = id == 1 ? s1 : id == 2 ? s2 : ult;
-    if(sk == null) return false;
-    
-    // CHECK ULT COOLDOWN
-    if (id == 3 && !isUltReady()) {
-        System.out.println("Ult is on cooldown! (" + ultCooldown + " turns remaining)");
-        return false;
-    }
-    
-    if(mana < sk.getManaCost()) {
-        System.out.println("Not enough mana!");
-        return false;
-    }
-
-    mana -= sk.getManaCost();
-    // SET ULT COOLDOWN
-    if (id == 3) {
-        resetUltCooldown();
-    }
-
-    int base = Utils.randomBetween(sk.getBaseDamageRangeLow(), sk.getBaseDamageRangeHigh());
-    
-    // === MISSING DAMAGE CALCULATION BLOCK STARTS HERE ===
-    double rarityMult = switch(rarity) {
-        case COMMON -> 1.0;
-        case RARE -> 1.4;
-        case LEGENDARY -> 2.0;
-    };
-    
-    // DEFINE finalDmg (fixes the error)
-    int finalDmg = (int)Math.round(base * rarityMult * tempBuff * playerMultiplier);
-    // === MISSING DAMAGE CALCULATION BLOCK ENDS HERE ===
-    
-    String buffMsg = (playerMultiplier > 1.0 || tempBuff > 1.0) ? " (Boosted!)" : "";
-    enemy.takeDamage(finalDmg); // This line now uses the defined finalDmg
-    System.out.println(name + " uses " + sk.getName() + " for ~" + finalDmg + " dmg." + buffMsg);
-
-    clearTempBuff();
-    return true;
-}
-    
-
-   
+    // =================================================
 }

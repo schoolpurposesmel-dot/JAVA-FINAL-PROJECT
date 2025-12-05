@@ -1,6 +1,6 @@
 import java.security.Guard;
 import java.util.*;
-
+ 
 public class Game {
     private final Scanner sc = new Scanner(System.in);
     private Story story = new Story(sc);
@@ -10,7 +10,7 @@ public class Game {
     private String characterName;
    
     public Game() {}
-
+ 
     public void launch() {
         while(true) {
             ASCII.printTitle();
@@ -19,14 +19,14 @@ public class Game {
             System.out.println(" [2] CONTINUE");
             System.out.println(" [0] EXIT");
             System.out.print(" > ");
-            
+           
             String choice = sc.nextLine().trim();
             switch(choice) {
                 case "1": startNewGame(); break;
-                case "2": 
+                case "2":
                     if(loadProgress()) {
                         System.out.println("Save loaded! Welcome back, " + player.getName());
-                        mainLoop(); 
+                        mainLoop();
                     } else {
                         System.out.println("No save file found.");
                         Utils.pause(1000);
@@ -37,36 +37,36 @@ public class Game {
             }
         }
     }
-
+ 
     public void startNewGame() {
         Utils.setInstantTextMode();
-
+ 
         chooseCharacter();
         if (player != null) player.setInstantText(Utils.instantTextMode);
-
+ 
         story.startPrologue(characterName);
-        
+       
         System.out.println("\nSkip lore? (yes/no)");
         if (!sc.nextLine().trim().equalsIgnoreCase("yes")) story.loreIntro();
-
+ 
         story.continuation(characterName);
-        
+       
     System.out.println("\nA WILD LOST NODE APPEARS!");
     Utils.slowPrint("\n(" + characterName + "): \"Whoa! What was that?!\"", 20);
     Utils.slowPrint("(Guard): That's one of them! A corrupted being. A lost node. Quick! Prepare for Battle!", 20);  
-
+ 
     Utils.slowPrint("(Guard): \"Use your mana wisely! Every still drains your energy! Don't let your Brainrot die!\"", 20);  
         // --- START: BATTLE READY LOOP (FIXED) ---
         boolean battleReady = false;
         System.out.println("\n-------------------------------------------");
         System.out.println("Prepare yourself for Battle. Type 'GO' to start the battle...");
-
+ 
         while (!battleReady) {
             System.out.print("> ");
-            
+           
             try {
                 String input = sc.nextLine().trim();
-                
+               
                 if (input.equalsIgnoreCase("GO")) {
                     battleReady = true;
                     System.out.println("\nGOODLUCK!");
@@ -80,22 +80,22 @@ public class Game {
             }
         }
         System.out.println("-------------------------------------------");
-        
+       
         if (player.getPartyCount() == 0) {
-            player.addToParty(BrainrotFactory.randomBrainrot(player)); 
+            player.addToParty(BrainrotFactory.randomBrainrot(player));
         }
-
+ 
         Enemy tutorialEnemy = EnemyFactory.createLostNode();
         Battle tutorialBattle = new Battle(player, tutorialEnemy, sc, inventory);
         tutorialBattle.start();
-
+ 
         story.duringBattle(characterName);
         story.afterBattle(characterName);
         story.afterTutorial(characterName);
         mainLoop();
     }
-    
-    public boolean loadProgress() { 
+   
+    public boolean loadProgress() {
         Object[] data = SaveManager.loadGame();
         if (data != null) {
             this.player = (Player) data[0];
@@ -103,25 +103,25 @@ public class Game {
             Utils.instantTextMode = player.isInstantText();
             return true;
         }
-        return false; 
+        return false;
     }
-
+ 
     private void chooseCharacter() {
         CharacterSelection cs = new CharacterSelection(sc);
-        characterName = cs.chooseCharacter(); 
-        
+        characterName = cs.chooseCharacter();
+       
         switch (characterName) {
             case "Carmel": player = new Tank(characterName); break;
             case "Trixy": player = new Healer(characterName); break;
             case "Sedric": player = new Fighter(characterName); break;
             case "Carlo": player = new Collector(characterName); break;
-            default: 
+            default:
                 System.out.println("Defaulting to Fighter class.");
-                player = new Fighter(characterName); 
+                player = new Fighter(characterName);
                 break;
         }
     }
-
+ 
     private void mainLoop() {
         running = true;
         while (running) {
@@ -137,16 +137,16 @@ public class Game {
             System.out.println("| [6] Clinic (Revive)             |");
             System.out.println("| [7] Show Party                  |");
             System.out.println("| [8] Upgrade Brainrot            |");
-            System.out.println("| [9] Sell Brainrots              |"); 
+            System.out.println("| [9] Sell Brainrots              |");
             if (player.hasAllKeys()) {
                 System.out.println("| [!] UNLOCK BACKGATE             |");
             }
             System.out.println("| [0] Save & Exit to Title        |");
             System.out.println("'---------------------------------'");
             System.out.print(" Choice > ");
-            
+           
             String c = sc.nextLine().trim();
-
+ 
             switch (c) {
                 case "1": farmLoop(); break;
                 case "2": inventory.printBackpack(); inventory.printItems(); break;
@@ -157,19 +157,19 @@ public class Game {
                 case "7": player.printParty(); break;
                 case "8": upgradeMenu(); break;
                 case "9": sellMenu(); break;
-                case "!": 
-                    if (player.hasAllKeys()) unlockBackgateSequence(); 
+                case "!":
+                    if (player.hasAllKeys()) unlockBackgateSequence();
                     else System.out.println("Locked.");
                     break;
-                case "0": 
+                case "0":
                     SaveManager.saveGame(player, inventory);
-                    running = false; 
+                    running = false;
                     break;
                 default: System.out.println("Invalid command.");
             }
         }
     }
-
+ 
     private void enterBuildingMenu() {
         if (player.getPartyCount() == 0) {
             ASCII.printBox("LOCKED! You must equip Brainrots first.");
@@ -177,12 +177,12 @@ public class Game {
             Utils.pause(1000);
             return;
         }
-
+ 
         ASCII.printMenuHeader("SELECT BUILDING");
         System.out.println(" [NGE]  [GLE]  [RTL]");
         System.out.print(" > ");
         String b = sc.nextLine().trim().toUpperCase();
-        
+       
         if (b.equals("GLE") && !player.hasKey('C')) {
             ASCII.printBox("LOCKED! You need the Key [C] from NGE first.");
             return;
@@ -191,19 +191,19 @@ public class Game {
             ASCII.printBox("LOCKED! You need Keys [C] and [I] first.");
             return;
         }
-
+ 
         Building building = null;
         switch(b) {
             case "NGE": building = BuildingFactory.createNGE(); break;
             case "GLE": building = BuildingFactory.createGLE(); break;
             case "RTL": building = BuildingFactory.createRTL(); break;
         }
-
+ 
         if (building != null) {
             story.bossEncounter(building.getBossName());
             int res = building.explore(player, sc, inventory);
-            
-            if (res == 1) { 
+           
+            if (res == 1) {
                 if (b.equals("RTL")) {
                     handleSirKhaiDefeat();
                 } else {
@@ -213,18 +213,18 @@ public class Game {
                         System.out.println("You obtained Key [" + building.getKey() + "]!");
                     }
                 }
-            } else if (res == 0) { 
+            } else if (res == 0) {
                 story.defeat();
             }
         } else {
             System.out.println("Invalid building.");
         }
     }
-
+ 
     private void handleSirKhaiDefeat() {
         boolean originalInstantMode = Utils.instantTextMode;
-        Utils.instantTextMode = false; 
-
+        Utils.instantTextMode = false;
+ 
         Utils.line();
         Utils.slowPrint("Sir Khai drops to one knee, the red code surrounding him flickering violently.", 30);
         Utils.pause(800);
@@ -233,27 +233,27 @@ public class Game {
         Utils.slowPrint("He looks up, his eyes turning from chaotic red to a fading white.", 40);
         Utils.slowPrint("'You have... passed the final evaluation. Do not... waste this freedom.'", 40);
         Utils.pause(1000);
-        
+       
         System.out.println("\n[SYSTEM] CRITICAL ERROR. BOSS DELETED.");
         Utils.pause(1000);
         ASCII.printBox("SIR KHAI DEFEATED");
-        
+       
         if (!player.hasKey('T')) {
             player.obtainKey('T');
             Utils.slowPrint("\nYou pick up the final Key: [T]. It hums with immense power.", 30);
         }
-        
+       
         Utils.slowPrint("Your pocket feels heavy. All three keys are reacting to each other.", 30);
         Utils.pause(1000);
-
-        Utils.instantTextMode = originalInstantMode; 
-        
+ 
+        Utils.instantTextMode = originalInstantMode;
+       
         System.out.println("\n------------------------------------------------");
         System.out.println(" You just gathered all the keys.");
         System.out.println(" Want to unlock the backgate to escape?");
         System.out.println("------------------------------------------------");
         System.out.print(" (yes/no) > ");
-        
+       
         String choice = sc.nextLine().trim();
         if (choice.equalsIgnoreCase("yes")) {
             unlockBackgateSequence();
@@ -261,53 +261,53 @@ public class Game {
             System.out.println("You decided to wait. Returning to main menu.");
         }
     }
-
+ 
     private void unlockBackgateSequence() {
         Utils.line();
         ASCII.printBox("THE BACKGATE");
         Utils.line();
         Utils.slowPrint("You stand before the massive digital gate at the back of the campus.", 30);
-        
+       
         if (!player.hasAllKeys()) {
             System.out.println("You don't have all the keys yet!");
             return;
         }
-
+ 
         System.out.println("\n[SYSTEM] INITIALIZING UNLOCK PROTOCOL...");
         Utils.pause(1000);
-
+ 
         System.out.print(" > Inserting Key [C]");
         for(int i=0; i<3; i++) { Utils.pause(400); System.out.print("."); }
         System.out.println(" [ACCEPTED]");
-        
+       
         System.out.print(" > Inserting Key [I]");
         for(int i=0; i<3; i++) { Utils.pause(400); System.out.print("."); }
         System.out.println(" [ACCEPTED]");
-
+ 
         System.out.print(" > Inserting Key [T]");
         for(int i=0; i<3; i++) { Utils.pause(400); System.out.print("."); }
         System.out.println(" [ACCEPTED]");
-
+ 
         Utils.pause(1000);
         System.out.println("\n[SYSTEM] AUTHENTICATION COMPLETE.");
         Utils.pause(800);
         System.out.println("[SYSTEM] DROPPING BARRIER...");
         Utils.pause(2000);
-
+ 
         ASCII.printBox("GATE OPENED");
-        
-        ASCII.printSirKhai(); 
-        
+       
+        ASCII.printSirKhai();
+       
         Utils.slowPrint("\nThe digital wall flickers and dissolves into millions of pixels.", 40);
         Utils.slowPrint("The cool, real air of the outside world hits your face.", 40);
         Utils.slowPrint("You have finally escaped CIT University.", 50);
         Utils.pause(3000);
-        
+       
         ASCII.printTitle();
         Utils.center("THANK YOU FOR PLAYING!");
         running = false;
     }
-
+ 
   private void farmLoop() {
     ASCII.printMenuHeader("ESPACIO FARMING");
     boolean farming = true;
@@ -318,7 +318,7 @@ public class Game {
             System.out.println("Returning to Main Menu.");
             return; // Exit the farmLoop entirely if it's full
         }
-        
+       
         System.out.println(" [1] Search   [0] Back");
         System.out.print(" > ");
         String cmd = sc.nextLine().trim();
@@ -327,7 +327,7 @@ public class Game {
                 Brainrot found = BrainrotFactory.randomBrainrot(player);
                 ASCII.printBox("WILD " + found.getName().toUpperCase() + " APPEARED!");
                 System.out.println(found.describeShort());
-                
+               
                 // If capture fails (i.e., backpack hits limit), print message and continue loop to re-check the full status.
                 if(inventory.addToBackpack(found)) {
                     System.out.println("Captured! (" + inventory.size() + "/10)");
@@ -341,7 +341,7 @@ public class Game {
         }
     }
 }
-    
+   
     private void equipMenu() {
         ASCII.printMenuHeader("EQUIPMENT");
         inventory.printBackpack();
@@ -359,7 +359,7 @@ public class Game {
         }
         System.out.println("Party updated.");
     }
-
+ 
     private void sellMenu() {
         boolean selling = true;
         while(selling) {
@@ -386,7 +386,7 @@ public class Game {
             } catch (Exception e) { System.out.println("Invalid input."); }
         }
     }
-
+ 
     private void visitCanteen() {
         boolean shopping = true;
         while(shopping) {
@@ -417,7 +417,7 @@ public class Game {
             }
         }
     }
-    
+   
     // === UPDATED: BUDGET CLINIC LOGIC ===
     private void visitClinic() {
         ASCII.printMenuHeader("CLINIC");
@@ -425,7 +425,7 @@ public class Game {
         System.out.println(" [2] Budget Aid (250c)     - Add +50% HP/Mana to all");
         System.out.println(" [0] Exit");
         System.out.print(" > ");
-        
+       
         String c = sc.nextLine().trim();
         if (c.equals("1")) {
             if (player.getCoins() >= 500) {
@@ -434,16 +434,16 @@ public class Game {
             } else System.out.println("Not enough coins.");
         } else if (c.equals("2")) {
             if (player.getCoins() >= 250) {
-                player.spendCoins(250); 
+                player.spendCoins(250);
                 player.reviveAll(); // Ensures fainted ones are back up first
-                
+               
                 // ADD 50% HP/Mana to current stats (Instead of setting cap)
                 for(int i=0; i<player.getPartyCount(); i++) {
                     Brainrot b = player.party.get(i);
-                    
+                   
                     int healAmt = b.getMaxHp() / 2;
-                    b.heal(healAmt); 
-                    
+                    b.heal(healAmt);
+                   
                     int manaAmt = b.getMaxMana() / 2;
                     b.restoreMana(manaAmt);
                 }
@@ -451,7 +451,7 @@ public class Game {
             } else System.out.println("Not enough coins.");
         }
     }
-    
+   
     private void upgradeMenu() {
         ASCII.printMenuHeader("UPGRADE");
         for (int i=0; i<player.getPartyCount(); i++) {
@@ -459,11 +459,11 @@ public class Game {
         }
         System.out.println(" [0] Cancel");
         System.out.print(" Enter slot number to upgrade (50c) > ");
-        
+       
         try {
             int idx = Integer.parseInt(sc.nextLine().trim()) - 1;
             if (idx == -1) return;
-            
+           
             if (idx >= 0 && idx < player.getPartyCount()) {
                 if (player.getCoins() >= 50) {
                     player.spendCoins(50);

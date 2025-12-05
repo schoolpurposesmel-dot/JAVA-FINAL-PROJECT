@@ -122,13 +122,12 @@ public class Battle {
             if (b.isFainted()) status = " [FAINTED]";
             else if (b == activeBrainrot) status = " [ACTIVE]";
             
-            // 3. CALCULATE AND DISPLAY MANA PERCENTAGE
-            double manaPercent = (double)b.getCurrentMana() / b.getMaxMana() * 100;
-            String manaDisplay = String.format("%.0f%%", manaPercent);
-            
+            // MODIFIED LINE: Mana is now displayed as Current/Max
+            String manaDisplay = b.getCurrentMana() + "/" + b.getMaxMana() + " MP";
+
             System.out.println(" [" + (i + 1) + "] " + b.getName() + status + 
                                " | HP: " + b.getCurrentHp() + "/" + b.getMaxHp() +
-                               " | Mana: " + manaDisplay); // Updated line
+                               " | Mana: " + manaDisplay); // Updated display
         }
         System.out.println(" [0] Cancel");
         System.out.print(" Enter slot number > ");
