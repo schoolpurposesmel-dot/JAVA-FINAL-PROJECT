@@ -8,30 +8,30 @@ public class Utils {
 
    
     public static void setInstantTextMode() {
-        // Creates a new Scanner for local use in this method
+        
         Scanner scanner = new Scanner(System.in); 
         String input;
         
         System.out.println("Enable instant text mode? (yes/no)");
         
-        // Loop until valid input is received
+        
         while (true) {
             System.out.print("> ");
-            // Read input, remove spaces, and convert to uppercase for robust checking
+            
             input = scanner.nextLine().trim().toUpperCase(); 
 
             if (input.equals("YES") || input.equals("Y")) {
                 instantTextMode = true;
                 System.out.println("Instant text mode is now ON.");
-                break; // Exit the loop
+                break; 
             } 
             else if (input.equals("NO") || input.equals("N")) {
                 instantTextMode = false;
                 System.out.println("Instant text mode is now OFF (Narrative text will be slow).");
-                break; // Exit the loop
+                break; 
             } 
             else {
-                // Invalid Input: Print error and loop again
+                
                 System.err.println("ERROR: Invalid input. Please type exactly 'YES' or 'NO'.");
             }
         }
@@ -46,7 +46,7 @@ public class Utils {
         return low + rnd.nextInt(Math.max(1, high - low + 1));
     }
 
-    // Respects the "Instant Text" setting (Use for Lore/Intro)
+    
     public static void slowPrint(String text, long delayMillis) {
         long actualDelay = instantTextMode ? 0 : delayMillis;
         for (char c : text.toCharArray()) {
@@ -59,7 +59,7 @@ public class Utils {
         System.out.println();
     }
 
-    // Ignores settings, ALWAYS slow (Use for Dramatic Battles/Bosses)
+  
     public static void forceSlowPrint(String text, long delayMillis) {
         for (char c : text.toCharArray()) {
             System.out.print(c);
