@@ -14,7 +14,15 @@ public class Brainrot implements ICombatant, Serializable {
     private final Skill s1, s2, ult;
     private double tempBuff = 1.0;
     
-    // NEW: For Tank Ability
+    // NEW: Upgrade Counter
+    private int upgradeLevel = 0; 
+    private final int MAX_UPGRADE = 2; // Maximum upgrades allowed
+    
+    // NEW: Ult Cooldown
+    private int ultCooldown; 
+    private final int MAX_ULT_COOLDOWN = 3; 
+    
+    // For Tank Ability
     private double damageResist = 1.0; 
     
     public Brainrot(String name, Rarity rarity, int maxHp, int maxMana, Skill s1, Skill s2, Skill ult) {
@@ -27,6 +35,9 @@ public class Brainrot implements ICombatant, Serializable {
         this.s1 = s1;
         this.s2 = s2;
         this.ult = ult;
+        
+        // CRITICAL CHANGE: ENFORCE INITIAL 3-TURN CHARGE REQUIREMENT
+        this.ultCooldown = MAX_ULT_COOLDOWN; 
     }
 
     @Override public String getName() { return name; }
@@ -63,6 +74,12 @@ public class Brainrot implements ICombatant, Serializable {
     public Skill getSkill1() { return s1; }
     public Skill getSkill2() { return s2; }
     public Skill getUlt() { return ult; }
+    
+    // Cooldown management methods
+    public void resetUltCooldown() { this.ultCooldown = MAX_ULT_COOLDOWN; }
+    public void decreaseUltCooldown() { if (ultCooldown > 0) ultCooldown--; }
+    public boolean isUltReady() { return ultCooldown <= 0; }
+    public int getUltCooldown() { return ultCooldown; }
 
     public void buffMaxHp(int amount) {
         this.maxHp += amount;
@@ -79,9 +96,16 @@ public class Brainrot implements ICombatant, Serializable {
     public void applyTempBuff(double m) { tempBuff = m; }
     public void clearTempBuff() { tempBuff = 1.0; }
 
+    // === CONSOLIDATED useSkill METHOD ===
     public boolean useSkill(int id, Enemy enemy, double playerMultiplier) {
         Skill sk = id == 1 ? s1 : id == 2 ? s2 : ult;
         if(sk == null) return false;
+        
+        // 1. CHECK ULT COOLDOWN
+        if (id == 3 && !isUltReady()) {
+            System.out.println("Ult is on cooldown! (" + ultCooldown + " charges remaining)");
+            return false;
+        }
         
         if(mana < sk.getManaCost()) {
             System.out.println("Not enough mana!");
@@ -89,6 +113,12 @@ public class Brainrot implements ICombatant, Serializable {
         }
 
         mana -= sk.getManaCost();
+        
+        // 2. SET ULT COOLDOWN
+        if (id == 3) {
+            resetUltCooldown();
+        }
+
         int base = Utils.randomBetween(sk.getBaseDamageRangeLow(), sk.getBaseDamageRangeHigh());
         
         double rarityMult = switch(rarity) {
@@ -97,6 +127,7 @@ public class Brainrot implements ICombatant, Serializable {
             case LEGENDARY -> 2.0;
         };
         
+        // Define finalDmg
         int finalDmg = (int)Math.round(base * rarityMult * tempBuff * playerMultiplier);
 
         enemy.takeDamage(finalDmg);
@@ -107,13 +138,20 @@ public class Brainrot implements ICombatant, Serializable {
         clearTempBuff();
         return true;
     }
+    // ====================================
 
     public String describeShort() {
         return name + " (" + rarity + ") HP:" + maxHp + "/" + hp + " Mana:" + maxMana + "/" + mana
                 + " Skills: " + s1.getName() + ", " + s2.getName() + ", " + ult.getName();
     }
 
+    // === MODIFIED UPGRADE METHOD (Implements Limit) ===
     public void upgrade() {
+        if (upgradeLevel >= MAX_UPGRADE) {
+            System.out.println(name + " is already at max upgrade level (" + MAX_UPGRADE + ")!");
+            return;
+        }
+        
         maxHp += 40;
         hp = maxHp;
         maxMana += 20;
@@ -121,6 +159,9 @@ public class Brainrot implements ICombatant, Serializable {
         s1.increaseDamage(10);
         s2.increaseDamage(15);
         ult.increaseDamage(25);
-        System.out.println("Upgraded!");
+        
+        upgradeLevel++; // Increment the counter
+        System.out.println("Upgraded! (" + upgradeLevel + "/" + MAX_UPGRADE + ")");
     }
+    // =================================================
 }
